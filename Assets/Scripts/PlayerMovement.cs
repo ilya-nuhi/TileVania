@@ -50,7 +50,6 @@ public class PlayerMovement : MonoBehaviour
     void FlipSprite()
     {
         bool playerHasHorizontalSpeed = Mathf.Abs(myRigidBody.velocity.x) > Mathf.Epsilon;
-        Debug.Log("trololo");
         if (playerHasHorizontalSpeed){
             transform.localScale = new Vector2 (Mathf.Sign(myRigidBody.velocity.x),1f);
         }
