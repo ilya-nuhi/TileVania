@@ -10,6 +10,10 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float runSpeed = 10f;
     [SerializeField] float jumpSpeed = 20f;
     [SerializeField] float climbSpeed = 5f;
+    [SerializeField] Vector2 deathKick = new Vector2 (10f,10f);
+    [SerializeField] GameObject bullet;
+    [SerializeField] Transform gun;
+    
     Vector2 moveInput;
     Rigidbody2D myRigidBody;
     Animator myAnimator;
@@ -19,6 +23,12 @@ public class PlayerMovement : MonoBehaviour
     CapsuleCollider2D myBodyCollider;
     
     BoxCollider2D myFeetCollider;
+
+    SpriteRenderer mySprite;
+
+    
+
+    bool isAlive = true;
     void Start()
     {
         myRigidBody = GetComponent<Rigidbody2D>();
@@ -26,14 +36,17 @@ public class PlayerMovement : MonoBehaviour
         myBodyCollider = GetComponent<CapsuleCollider2D>();
         myFeetCollider = GetComponent<BoxCollider2D>();
         gravityScaleAtStart = myRigidBody.gravityScale;
+        mySprite = GetComponent<SpriteRenderer>();
     
     }
 
     void Update()
     {
+        if(!isAlive){return;}
         Run();
         FlipSprite();
         ClimbLadder();
+        Die();
     }
 
     void ClimbLadder()
@@ -60,14 +73,21 @@ public class PlayerMovement : MonoBehaviour
     }
 
     void OnMove(InputValue value){
+        if(!isAlive){return;}
         moveInput = value.Get<Vector2>();
-        Debug.Log(moveInput);
     }
 
     void OnJump(InputValue value){
+        if(!isAlive){return;}
         if(!myFeetCollider.IsTouchingLayers(LayerMask.GetMask("Ground"))){return;};
         if(value.isPressed){
             myRigidBody.velocity += new Vector2 (0f,jumpSpeed);
+        }
+    }
+
+    void OnFire(InputValue value){
+        if(value.isPressed){
+            Instantiate(bullet, gun.position, transform.rotation);
         }
     }
 
@@ -78,4 +98,14 @@ public class PlayerMovement : MonoBehaviour
         myAnimator.SetBool("isRunning", playerHasHorizontalSpeed);
     }
 
+    void Die()
+    {
+        if(myBodyCollider.IsTouchingLayers(LayerMask.GetMask("Enemies","Hazard"))){
+            isAlive = false;
+            myAnimator.SetTrigger("Dying");
+            myRigidBody.velocity = deathKick;
+            //mySprite.color = new Color (1,0.325f,0.325f,1);
+        }
+        
+    }
 }
