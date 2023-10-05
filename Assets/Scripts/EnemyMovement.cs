@@ -19,26 +19,19 @@ public class EnemyMovement : MonoBehaviour
 
     void Update()
     {
-        myRigidBody.velocity = new Vector2 (movementSpeed,0f);
+        myRigidBody.velocity = new Vector2 (Mathf.Sign(myRigidBody.transform.localScale.x)*movementSpeed,0f);
         FlipEnemyFacingHelper();
     }
 
     void FlipEnemyFacingHelper()
     {
         if(myBoxCollider.IsTouchingLayers(LayerMask.GetMask("Hazard","Ground"))){
-            movementSpeed = -movementSpeed;
             FlipEnemyFacing();
         }
-        if(!myCircleCollider.IsTouchingLayers(LayerMask.GetMask("Ground"))){
-            movementSpeed = -movementSpeed;
+        if(!myCircleCollider.IsTouchingLayers(LayerMask.GetMask("Ground","Climbing"))){
             FlipEnemyFacing();
         }
     }
-
-    // void OnTriggerExit2D(Collider2D other) {
-    //     movementSpeed = -movementSpeed;
-    //     FlipEnemyFacing();
-    // }
 
     void FlipEnemyFacing()
     {
