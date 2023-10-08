@@ -106,6 +106,7 @@ public class PlayerMovement : MonoBehaviour
             myAnimator.SetTrigger("Dying");
             myRigidBody.velocity = deathKick;
             //mySprite.color = new Color (1,0.325f,0.325f,1);
+            FindObjectOfType<GameSession>().ProcessPlayerDeath();
         }
         
     }
