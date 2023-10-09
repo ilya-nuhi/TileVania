@@ -29,6 +29,8 @@ public class PlayerMovement : MonoBehaviour
     
     float gravityScaleAtStart;
 
+    int jumpCount;
+
     CapsuleCollider2D myBodyCollider;
     
     BoxCollider2D myFeetCollider;
@@ -88,8 +90,11 @@ public class PlayerMovement : MonoBehaviour
 
     void OnJump(InputValue value){
         if(!isAlive){return;}
-        if(!myFeetCollider.IsTouchingLayers(LayerMask.GetMask("Ground"))){return;};
-        if(value.isPressed){
+        if(myFeetCollider.IsTouchingLayers(LayerMask.GetMask("Ground"))){
+            jumpCount = 1;
+        }
+        if(value.isPressed && jumpCount>=1){
+            jumpCount--;
             myRigidBody.velocity += new Vector2 (0f,jumpSpeed);
         }
     }
