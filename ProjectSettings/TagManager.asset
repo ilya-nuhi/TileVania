@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Enemy
   - Hazard
+  - Bouncing
   layers:
   - Default
   - TransparentFX

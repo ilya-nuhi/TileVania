@@ -5,6 +5,9 @@ using UnityEngine;
 public class Bullet : MonoBehaviour
 {
     [SerializeField] float bulletSpeed = 20f;
+
+    [SerializeField] AudioClip slimeDeathSFX;
+    [SerializeField] float volumeSFX=75;
     Rigidbody2D myRigidBody;
     float xSpeed;
     PlayerMovement player;
@@ -23,6 +26,7 @@ public class Bullet : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other) {
         if(other.tag == "Enemy" ){
+            AudioSource.PlayClipAtPoint(slimeDeathSFX,gameObject.transform.position, volumeSFX);
             Destroy(other.gameObject);
         }
         Destroy(gameObject);

@@ -7,12 +7,21 @@ using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
+    [Header("Player")]
     [SerializeField] float runSpeed = 10f;
     [SerializeField] float jumpSpeed = 20f;
     [SerializeField] float climbSpeed = 5f;
     [SerializeField] Vector2 deathKick = new Vector2 (10f,10f);
+
+    [Header("Gun")]
     [SerializeField] GameObject bullet;
     [SerializeField] Transform gun;
+
+    [Header("Audio")]
+    [SerializeField] AudioClip fireSFX;
+    [SerializeField] AudioClip bounceSFX;
+    
+
     
     Vector2 moveInput;
     Rigidbody2D myRigidBody;
@@ -88,6 +97,7 @@ public class PlayerMovement : MonoBehaviour
     void OnFire(InputValue value){
         if(!isAlive){return;}
         if(value.isPressed){
+            GetComponent<AudioSource>().PlayOneShot(fireSFX);
             Instantiate(bullet, gun.position, transform.rotation);
         }
     }
@@ -108,6 +118,11 @@ public class PlayerMovement : MonoBehaviour
             //mySprite.color = new Color (1,0.325f,0.325f,1);
             FindObjectOfType<GameSession>().ProcessPlayerDeath();
         }
-        
+    }
+
+    void OnCollisionEnter2D(Collision2D other){
+        if(other.gameObject.tag=="Bouncing"){
+            AudioSource.PlayClipAtPoint(bounceSFX, other.gameObject.transform.position);
+        }
     }
 }

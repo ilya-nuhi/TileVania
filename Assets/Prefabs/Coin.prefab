@@ -184,6 +184,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7253ca2baa92b44d91360feb20a0c49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  coinScore: 100
   coinPickupSFX: {fileID: 8300000, guid: afc7a498902544244865bf2a31c8028c, type: 3}
 --- !u!82 &1435019712047223512
 AudioSource:
@@ -197,7 +198,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.725
   m_Pitch: 1
   Loop: 0
   Mute: 0

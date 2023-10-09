@@ -5,13 +5,19 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+
 public class GameSession : MonoBehaviour
 {
     [SerializeField] int playerLives = 3;
     [SerializeField] TextMeshProUGUI livesText;
     [SerializeField] TextMeshProUGUI scoreText;
+    [SerializeField] float levelLoadDelay = 1f;
 
-    int playerScore = 0;
+    [SerializeField] AudioClip deathSFX;
+    [SerializeField] AudioClip gameOverSFX;
+
+
+    public int playerScore = 0;
     void Awake() {
         int numGameSessions = FindObjectsOfType<GameSession>().Length;
         if(numGameSessions>1){
@@ -29,10 +35,12 @@ public class GameSession : MonoBehaviour
 
     public void ProcessPlayerDeath(){
         if(playerLives>1){
-            TakeLife();
+            GetComponent<AudioSource>().PlayOneShot(deathSFX);
+            StartCoroutine(TakeLife());
         }
         else{
-            ResetGameSession();
+            GetComponent<AudioSource>().PlayOneShot(gameOverSFX);
+            StartCoroutine(ResetGameSession());
         }
     }
 
@@ -41,17 +49,21 @@ public class GameSession : MonoBehaviour
         scoreText.text = playerScore.ToString();
     }
 
-    void TakeLife()
+    IEnumerator TakeLife()
     {
+        yield return new WaitForSecondsRealtime(levelLoadDelay);
         playerLives--;
         int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
         SceneManager.LoadScene(currentSceneIndex);
         livesText.text = playerLives.ToString();
     }
 
-    void ResetGameSession()
+    IEnumerator ResetGameSession()
     {
-        SceneManager.LoadScene(0);
+        yield return new WaitForSecondsRealtime(levelLoadDelay);
+        FindObjectOfType<ScenePersist>().SceneDestroy();
         Destroy(gameObject);
+        SceneManager.LoadScene(0);
+
     }
 }
